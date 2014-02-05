@@ -87,6 +87,10 @@ which will use the default REPL connection."
   :type 'symbol
   :group 'cider)
 
+(defcustom cider-prompt-save-file-on-load t
+  "When t, cider will prompt you to save the corresponding file when loading a
+buffer.")
+
 (defface cider-error-highlight-face
   '((((supports :underline (:style wave)))
      (:underline (:style wave :color "red") :inherit unspecified))
@@ -1242,7 +1246,8 @@ under point, prompts for a var."
   (check-parens)
   (unless buffer-file-name
     (error "Buffer %s is not associated with a file" (buffer-name)))
-  (when (and (buffer-modified-p)
+  (when (and cider-prompt-save-file-on-load
+             (buffer-modified-p)
              (y-or-n-p (format "Save file %s? " (buffer-file-name))))
     (save-buffer))
   (cider-load-file (buffer-file-name)))
